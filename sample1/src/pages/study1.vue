@@ -42,6 +42,7 @@ export default {
             )
                 .then(response => {
                     // this.users = response.data;
+                    this.users=response.data._embedded.users;
                     console.log(response);
                 })
                 .catch(error => {
