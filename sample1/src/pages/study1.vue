@@ -1,6 +1,6 @@
 <template>
     <div>
-        <btn @click="click1">Click Me</btn>
+        <v-btn @click="click1">Click Me</v-btn>
         <pre>{{ data1 }}</pre>
         <pre>{{ data2 }}</pre>
         <table>
