@@ -1,7 +1,14 @@
 <template>
-    <div>
+    <div class="main-page">
         <table class="user-table">
-            <tbody>
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+            <tbody> 
                 <tr v-for="user in users" :key="user.id">
                     <td>{{ user.name }}</td>
                     <td>
@@ -20,7 +27,7 @@
 
 
 
-    <!-- dialog -->
+    <!-- 회원 정보 수정 dialog -->
     <div class="pa-4 text-center">
         <v-dialog v-model="dialog" max-width="600">
            
@@ -133,4 +140,18 @@ export default {
     }
 }
 </script>
-<style></style>
+<style>
+.main-page {
+    padding: 20px;
+}
+
+.user-table {
+    border-collapse: collapse;
+}
+.user-table,
+.user-table td, .user-table th {
+    border: 1px solid #333;
+    padding: 6px 10px;
+}
+
+</style>
