@@ -3,11 +3,12 @@
         <v-btn @click="click1">Click Me</v-btn>
         <pre>{{ data1 }}</pre>
         <pre>{{ data2 }}</pre>
-        <table>
-            <tr v-for="user in users" :key="user.id">
-                <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-            </tr>
+        <table class="user-table">
+            <tbody>
+                <tr v-for="user in users" :key="user.id">
+                    <td>{{ user.name }}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </template>
@@ -42,7 +43,7 @@ export default {
             )
                 .then(response => {
                     // this.users = response.data;
-                    this.users=response.data._embedded.users;
+                    this.users = response.data._embedded.users;
                     console.log(response);
                 })
                 .catch(error => {
@@ -53,4 +54,15 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.user-table {
+  border-collapse: collapse;
+}
+
+.user-table,
+.user-table td {
+  border: 1px solid #333;
+  padding: 6px 10px;
+}
+
+</style>
