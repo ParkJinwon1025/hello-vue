@@ -118,7 +118,8 @@ export default {
     },
     methods: {
         fetchUsers() {
-            axios.get('http://localhost:8080/api/users')
+            let url = import.meta.env.VITE_BACKEND+'/users';
+            axios.get(url)
                 .then(response => {
                     this.users = response.data._embedded.users;
                 })
@@ -159,7 +160,8 @@ export default {
         },
         
         createUser() {
-            axios.post('http://localhost:8080/api/users', {
+            let url = import.meta.env.VITE_BACKEND+'/users';
+            axios.post(url, {
                 name: this.name,
                 email: this.email,
                 phone: this.phone
