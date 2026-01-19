@@ -1,5 +1,4 @@
 # hello-vue
-hello-vue
 ## 1. 프로젝트 새로 생성하는 경우
 1-1. 프로젝트 생성
 ```bash
