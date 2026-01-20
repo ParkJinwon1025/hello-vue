@@ -2,11 +2,12 @@
     <div class="container">
         <!-- 제목 추가 -->
         <h1 class="page-title">회원 관리</h1>
-        
+
         <div class="main-page">
             <table class="user-table">
                 <thead>
                     <tr>
+                        <th>ID </th>
                         <th>이름</th>
                         <th>이메일</th>
                         <th>전화번호</th>
@@ -15,22 +16,15 @@
                 </thead>
                 <tbody>
                     <tr v-for="user in users" :key="user.id">
+                        <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.phone }}</td>
                         <td class="action-buttons">
-                            <v-btn 
-                                size="small" 
-                                color="primary" 
-                                variant="outlined"
-                                @click="clickUpdate(user)">
+                            <v-btn size="small" color="primary" variant="outlined" @click="clickUpdate(user)">
                                 수정
                             </v-btn>
-                            <v-btn 
-                                size="small" 
-                                color="error" 
-                                variant="outlined"
-                                @click="clickDelete(user)">
+                            <v-btn size="small" color="error" variant="outlined" @click="clickDelete(user)">
                                 삭제
                             </v-btn>
                         </td>
@@ -38,12 +32,9 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div class="sub-page">
-            <v-btn 
-                color="success" 
-                prepend-icon="mdi-plus"
-                @click="clickCreate">
+            <v-btn color="success" prepend-icon="mdi-plus" @click="clickCreate">
                 회원 생성
             </v-btn>
         </div>
@@ -55,6 +46,9 @@
             <v-card prepend-icon="mdi-account" :title="isCreateMode ? '회원 생성' : '회원 수정'">
                 <v-card-text>
                     <v-row dense>
+                        <v-col cols="12" v-if="!isCreateMode">
+                            <v-text-field label="ID" v-model="id" :disabled="true"></v-text-field>
+                        </v-col>
                         <v-col cols="12">
                             <v-text-field label="이름" v-model="name"></v-text-field>
                         </v-col>
@@ -68,11 +62,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn 
-                        :text="isCreateMode ? '생성' : '수정'" 
-                        color="primary" 
-                        variant="elevated"
-                        @click="saveUser">
+                    <v-btn :text="isCreateMode ? '생성' : '수정'" color="primary" variant="elevated" @click="saveUser">
                     </v-btn>
                     <v-btn text="취소" @click="dialog = false"></v-btn>
                 </v-card-actions>
@@ -109,7 +99,7 @@ export default {
             name: '',
             email: '',
             phone: '',
-            currentUserUrl: '',
+            currentUserId: null,
             userToDelete: null
         }
     },
@@ -117,40 +107,65 @@ export default {
         this.fetchUsers();
     },
     methods: {
+
+        // 사용자 목록 조회
         fetchUsers() {
-            let url = import.meta.env.VITE_BACKEND+'/users';
+            let url = import.meta.env.VITE_BACKEND + '/users';
             axios.get(url)
                 .then(response => {
-                    this.users = response.data._embedded.users;
+                    console.log("response : ", response.data);
+                    this.users = response.data._embedded.users.map(user => {
+                        return {
+                            ...user,
+                            id: user._links.self.href.split('/').pop()
+                        };
+                    });
+                    console.log("users : ", this.users);
                 })
                 .catch(error => {
                     console.error('Error fetching users:', error);
                 });
         },
-        
+
+        // 회원 생성 버튼 클릭
         clickCreate() {
             this.isCreateMode = true;
             this.name = '';
             this.email = '';
             this.phone = '';
-            this.currentUserUrl = '';
             this.dialog = true;
         },
-        
+
+        // 회원 수정 버튼 클릭
         clickUpdate(user) {
-            this.isCreateMode = false;
-            this.name = user.name;
-            this.email = user.email;
-            this.phone = user.phone;
-            this.currentUserUrl = user._links.self.href;
-            this.dialog = true;
+            console.log("user : ", user);
+            let url = user._links.self.href;
+
+            axios.get(url)
+                .then(response => {
+                    console.log("fetch user response : ", response.data);
+                    this.isCreateMode = false;
+                    this.id=user.id;
+                    this.name = user.name;
+                    this.email = user.email;
+                    this.phone = user.phone;
+                    this.currentUserUrl = user._links.self.href;
+                    this.dialog = true;
+                })
+                .catch(error => {
+                    alert('사용자를 찾을 수 없습니다.');
+                    this.fetchUsers();
+                });
         },
-        
+
+        // 회원 삭제 버튼 클릭
         clickDelete(user) {
             this.userToDelete = user;
+            this.currentUserUrl = user._links.self.href;
             this.deleteDialog = true;
         },
-        
+
+        // 회원 생성 또는 수정 저장
         saveUser() {
             if (this.isCreateMode) {
                 this.createUser();
@@ -158,45 +173,56 @@ export default {
                 this.updateUser();
             }
         },
-        
+
+        // 회원 생성
         createUser() {
-            let url = import.meta.env.VITE_BACKEND+'/users';
+            let url = import.meta.env.VITE_BACKEND + '/users';
             axios.post(url, {
                 name: this.name,
                 email: this.email,
                 phone: this.phone
             })
-            .then(response => {
-                console.log("생성 완료!");
-                this.dialog = false;
-                this.fetchUsers();
-            })
-            .catch(error => {
-                console.error('Error creating user:', error);
-            });
+                .then(response => {
+                    console.log("생성 완료!");
+                    this.dialog = false;
+                    this.fetchUsers();
+                })
+                .catch(error => {
+                    console.error('Error creating user:', error);
+                });
         },
-        
+
+        // 회원 정보 수정
         updateUser() {
-            axios.put(this.currentUserUrl, {
+            let url = this.currentUserUrl;
+            axios.put(url, {
                 name: this.name,
                 email: this.email,
                 phone: this.phone
             })
-            .then(response => {
-                console.log("수정 완료!");
-                this.dialog = false;
-                this.fetchUsers();
-            })
-            .catch(error => {
-                console.error('Error updating user:', error);
-            });
+                .then(response => {
+                    console.log("수정 완료!");
+                    this.dialog = false;
+                    this.fetchUsers();
+                })
+                .catch(error => {
+                    console.error('Error updating user:', error);
+                    if (error.response && error.response.status === 404) {
+                        alert('해당 사용자를 찾을 수 없습니다.');
+                    } else {
+                        alert('사용자 정보 업데이트 중 오류가 발생했습니다.');
+                    }
+                    this.dialog = false;
+                });
+
         },
-        
+
+        // 회원 삭제
         confirmDelete() {
             if (!this.userToDelete) return;
-            
-            const deleteUrl = this.userToDelete._links.self.href;
-            axios.delete(deleteUrl)
+
+            let url = this.currentUserUrl;
+            axios.delete(url)
                 .then(response => {
                     console.log("삭제 완료!");
                     this.deleteDialog = false;
