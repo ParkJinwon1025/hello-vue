@@ -96,10 +96,11 @@ export default {
             dialog: false,
             deleteDialog: false,
             isCreateMode: true,
+            id: '',
             name: '',
             email: '',
             phone: '',
-            currentUserId: null,
+            currentUserUrl: null,
             userToDelete: null
         }
     },
@@ -143,16 +144,17 @@ export default {
 
             axios.get(url)
                 .then(response => {
-                    console.log("fetch user response : ", response.data);
+                    const data = response.data;
                     this.isCreateMode = false;
-                    this.id=user.id;
-                    this.name = user.name;
-                    this.email = user.email;
-                    this.phone = user.phone;
-                    this.currentUserUrl = user._links.self.href;
+                    this.id = user.id;
+                    this.name = data.name;
+                    this.email = data.email;
+                    this.phone = data.phone;
+                    this.currentUserUrl = url;
                     this.dialog = true;
                 })
                 .catch(error => {
+                    console.error('Error fetching user:', error);
                     alert('사용자를 찾을 수 없습니다.');
                     this.fetchUsers();
                 });
@@ -213,6 +215,7 @@ export default {
                         alert('사용자 정보 업데이트 중 오류가 발생했습니다.');
                     }
                     this.dialog = false;
+                    this.fetchUsers();
                 });
 
         },
@@ -231,6 +234,14 @@ export default {
                 })
                 .catch(error => {
                     console.error('Error deleting user:', error);
+                    if (error.response && error.response.status === 404) {
+                        alert('해당 사용자를 찾을 수 없습니다.');
+                    } else {
+                        alert('사용자 삭제 중 오류가 발생했습니다.');
+                    }
+                    this.deleteDialog = false;
+                    this.userToDelete = null;
+                    this.fetchUsers();
                 });
         }
     }
