@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <!-- 제목 추가 -->
+
         <h1 class="page-title">회원 관리</h1>
 
         <div class="main-page">
