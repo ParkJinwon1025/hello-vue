@@ -85,13 +85,18 @@ import { entityConfigs } from '@/utils/entityConfigs';
 
 export default {
 
-    // 부모 컴포넌트에서 받는 값
+    // 부모 컴포넌트에서 값을 받을 때 사용
+    // this.item으로 접근 가능
     props: {
         item: {
             type: String,
             required: true
         }
     },
+
+    // 컴포넌트의 상태를 정의
+    // 컴포넌트 생성 시 1번 실행 됨.
+    // this.items와 같이 this 이용하여 접근 가능
     data() {
         console.log("data 함수");
         return {
@@ -119,11 +124,17 @@ export default {
             }));
         }
     },
+
+    // 컴포넌트가 화면에 표시된 직후 1번 실행됨. 
+    // 주로 초기 데이터 로딩할 때 사용
     mounted() {
         console.log("mounted 함수");
         this.initFormData();
         this.fetchItems();
     },
+
+    // 동작/액션을 정의할 때 사용.
+    // 호출할 때마다 괄호 붙여서 사용
     methods: {
         initFormData() {
             this.formData = { id: '' };
