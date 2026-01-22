@@ -21,6 +21,9 @@ declare module 'vue-router/auto-routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/contents/computers': RouteRecordInfo<'/contents/computers', '/contents/computers', Record<never, never>, Record<never, never>>,
     '/contents/monitors': RouteRecordInfo<'/contents/monitors', '/contents/monitors', Record<never, never>, Record<never, never>>,
+    '/contents/old/computersOld': RouteRecordInfo<'/contents/old/computersOld', '/contents/old/computersOld', Record<never, never>, Record<never, never>>,
+    '/contents/old/monitorsOld': RouteRecordInfo<'/contents/old/monitorsOld', '/contents/old/monitorsOld', Record<never, never>, Record<never, never>>,
+    '/contents/old/usersOld': RouteRecordInfo<'/contents/old/usersOld', '/contents/old/usersOld', Record<never, never>, Record<never, never>>,
     '/contents/users': RouteRecordInfo<'/contents/users', '/contents/users', Record<never, never>, Record<never, never>>,
     '/hello/': RouteRecordInfo<'/hello/', '/hello', Record<never, never>, Record<never, never>>,
     '/hello/bye/good': RouteRecordInfo<'/hello/bye/good', '/hello/bye/good', Record<never, never>, Record<never, never>>,
@@ -49,6 +52,18 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/contents/monitors.vue': {
       routes: '/contents/monitors'
+      views: never
+    }
+    'src/pages/contents/old/computersOld.vue': {
+      routes: '/contents/old/computersOld'
+      views: never
+    }
+    'src/pages/contents/old/monitorsOld.vue': {
+      routes: '/contents/old/monitorsOld'
+      views: never
+    }
+    'src/pages/contents/old/usersOld.vue': {
+      routes: '/contents/old/usersOld'
       views: never
     }
     'src/pages/contents/users.vue': {
