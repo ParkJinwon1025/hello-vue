@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <!-- 회원 정보 수정 dialog -->
+    <!-- 회원 정보 dialog -->
     <div class="pa-4 text-center">
         <v-dialog v-model="dialog" max-width="600">
             <v-card prepend-icon="mdi-account" :title="isCreateMode ? '회원 생성' : '회원 수정'">
@@ -248,4 +248,4 @@ export default {
 }
 </script>
 
-<style scoped src="@/styles/main.css"></style>
+<style scoped src="@/styles/user.css"></style>
