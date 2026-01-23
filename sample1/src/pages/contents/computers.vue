@@ -1,5 +1,5 @@
 <template>
-    <generic-view item="user" />
+    <generic-view item="computer" />
 </template>
 
 <script>
